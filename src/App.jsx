@@ -1,5 +1,12 @@
 import React from "react";
-import { Link, Redirect, Route, useParams, Switch } from "react-router-dom";
+import {
+    Link,
+    Navigate,
+    Outlet,
+    Route,
+    Routes,
+    useParams
+} from "react-router-dom";
 
 const users = [0, 1, 2, 3, 4];
 
@@ -18,20 +25,7 @@ function UsersLayout() {
             <p>
                 <Link to="/">Home Page</Link>
             </p>
-            <Switch>
-                <Route path="/users" exact component={UsersList} />
-                <Route
-                    path="/users/:userId/profile"
-                    exact
-                    component={UserProfilePage}
-                />
-                <Route
-                    path="/users/:userId/edit"
-                    exact
-                    component={UserEditPage}
-                />
-                <Redirect to="/users/:userId/profile" />
-            </Switch>
+            <Outlet />
         </>
     );
 }
@@ -96,13 +90,21 @@ function UserEditPage() {
 function App() {
     return (
         <>
-            <h1>App Layout v5</h1>
+            <h1>App Layout v6</h1>
             <Link to="/users">Users list Page</Link>
-            <Switch>
-                <Route path="/" exact component={HomePage} />
-                <Route path="/users/:userId?/:Page?" component={UsersLayout} />
-                <Redirect from="*" to="/" />
-            </Switch>
+            <Routes>
+                <Route index element={<HomePage />} />
+                <Route path="/users" element={<UsersLayout />}>
+                    <Route index element={<UsersList />} />
+                    <Route path=":userId">
+                        <Route index element={<Navigate to={"profile"} />} />
+                        <Route path="profile" element={<UserProfilePage />} />
+                        <Route path="edit" element={<UserEditPage />} />
+                        <Route path="*" element={<Navigate to={"profile"} />} />
+                    </Route>
+                </Route>
+                <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
         </>
     );
 }
