@@ -90,7 +90,7 @@ function UserEditPage() {
 function App() {
     return (
         <>
-            <h1>App Layout v6</h1>
+            <h1>App with RRD v6</h1>
             <Link to="/users">Users list Page</Link>
             <Routes>
                 <Route index element={<HomePage />} />
